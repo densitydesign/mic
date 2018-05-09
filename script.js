@@ -145,6 +145,7 @@ let removeIsochronousVectors = function() {
 let idle = true;
 let idleTime = 0;
 let idleInterval = setInterval(timerIncrement, 2000); // Count seconds
+let sexyCircleCount = 0;
 function timerIncrement() {
     idleTime = idleTime + 2;
     if (idleTime >= 20) {
@@ -153,21 +154,42 @@ function timerIncrement() {
     console.log(idleTime)
 
     if (idle) {
-        sexyCircles.append('circle')
-            .attr('cx', svgWidth / 2)
-            .attr('cy', svgHeight / 2)
+        d3.selectAll('g.city-names > g > circle').filter(function(d,i){ return i == sexyCircleCount})
             .attr('r', 0)
             .style('fill', 'transparent')
             .style('fill', 'transparent')
-            .style('stroke', 'white')
+            .style('stroke', '#ffffff')
+            // .style('stroke', '#faf7c1')
+            .style('stroke-width',2)
             .style('opacity', 1)
             .transition()
                 .duration(6000)
                 .ease(d3.easeCubicOut)
+                // .style('stroke','#342364')                
                 .attr('r', 500)
                 .style('opacity', 1e-6)
-            .remove();
+
+
+
+        // sexyCircles.append('circle')
+        //     .attr('cx', svgWidth / 2)
+        //     .attr('cy', svgHeight / 2)
+        //     .attr('r', 0)
+        //     .style('fill', 'transparent')
+        //     .style('fill', 'transparent')
+        //     .style('stroke', '#ffffff')
+        //     // .style('stroke', '#faf7c1')
+        //     .style('stroke-width',2)
+        //     .style('opacity', 1)
+        //     .transition()
+        //         .duration(6000)
+        //         .ease(d3.easeCubicOut)
+        //         // .style('stroke','#342364')                
+        //         .attr('r', 500)
+        //         .style('opacity', 1e-6)
+        //     .remove();
     }
+    sexyCircleCount++;
 }
 
 // Handle interactions
