@@ -73,15 +73,19 @@ d3.xml('assets/layer-names-01.svg')
             d3.select('.city-names').node().appendChild(this)
         })
 
+        d3.selectAll('.city-names text').attr('filter', 'url(#dropshadow)')
+
         d3.selectAll('.city-names > g')
             .on('click', function(d) {
                 let thisId = d3.select(this).attr('id');
-                loadVectors(thisId)
+                loadVectors(thisId);
+                idle = false;
             })
             .on('touchstart', function(d) {
                 let thisId = d3.select(this).attr('id');
                 if (d3.event.touches.length < 2) {
                     loadVectors(thisId);
+                    idle = false;
                 }
             })
 
@@ -118,9 +122,8 @@ let loadVectors = function(cityName) {
 }
 
 let removeIsochronousVectors = function() {
-    console.log('remove vectors');
-    idleTime = 0;
-
+    // console.log('remove vectors');
+    // idleTime = 0;
     d3.selectAll('.rails > *')
         .transition()
         .duration(500)
@@ -144,52 +147,40 @@ let removeIsochronousVectors = function() {
 // Handle idle time
 let idle = true;
 let idleTime = 0;
-let idleInterval = setInterval(timerIncrement, 2000); // Count seconds
+let secondsInterval = 2;
+let idleInterval = setInterval(timerIncrement, secondsInterval * 1000); // Count seconds
 let sexyCircleCount = 0;
+
+timerIncrement(); // run imediately only the first time
 function timerIncrement() {
-    idleTime = idleTime + 2;
+    idleTime = idleTime + secondsInterval;
     if (idleTime >= 20) {
         removeIsochronousVectors();
+        idle = true;
     }
-    console.log(idleTime)
+    // console.log(idleTime, idle)
 
     if (idle) {
-        d3.selectAll('g.city-names > g > circle').filter(function(d,i){ return i == sexyCircleCount})
+        d3.selectAll('g.city-names > g').select('circle').filter(function(d, i) { return i == sexyCircleCount })
             .attr('r', 0)
             .style('fill', 'transparent')
             .style('fill', 'transparent')
             .style('stroke', '#ffffff')
             // .style('stroke', '#faf7c1')
-            .style('stroke-width',2)
+            .style('pointer-events', 'none')
+            .style('stroke-width', 2)
             .style('opacity', 1)
             .transition()
-                .duration(6000)
-                .ease(d3.easeCubicOut)
-                // .style('stroke','#342364')                
-                .attr('r', 500)
-                .style('opacity', 1e-6)
-
-
-
-        // sexyCircles.append('circle')
-        //     .attr('cx', svgWidth / 2)
-        //     .attr('cy', svgHeight / 2)
-        //     .attr('r', 0)
-        //     .style('fill', 'transparent')
-        //     .style('fill', 'transparent')
-        //     .style('stroke', '#ffffff')
-        //     // .style('stroke', '#faf7c1')
-        //     .style('stroke-width',2)
-        //     .style('opacity', 1)
-        //     .transition()
-        //         .duration(6000)
-        //         .ease(d3.easeCubicOut)
-        //         // .style('stroke','#342364')                
-        //         .attr('r', 500)
-        //         .style('opacity', 1e-6)
-        //     .remove();
+            .duration(4000)
+            .ease(d3.easeCubicOut)
+            // .style('stroke','#342364')                
+            .attr('r', 400)
+            .style('opacity', 1e-6);
+        sexyCircleCount++;
+        if (sexyCircleCount >= d3.selectAll('g.city-names > g').select('circle').size()) {
+            sexyCircleCount = 0;
+        }
     }
-    sexyCircleCount++;
 }
 
 // Handle interactions
@@ -222,6 +213,18 @@ d3.selectAll('.toggle-vision')
     })
 
 let defs = svg.append('defs');
+
+defs.html(`<filter xmlns="http://www.w3.org/2000/svg" id="dropshadow" height="130%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="3" />
+            <feOffset dx="2" dy="2" result="offsetblur" />
+            <feComponentTransfer>
+                <feFuncA type="linear" slope="0.7" />
+            </feComponentTransfer>
+            <feMerge>
+                <feMergeNode/>
+                <feMergeNode in="SourceGraphic" />
+            </feMerge>
+        </filter>`)
 
 let holeMask = defs.append('mask')
     .attr('id', 'hole-mask')
