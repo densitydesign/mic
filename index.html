@@ -46,8 +46,7 @@
         overflow: hidden;
     }
 
-    svg {
-    }
+    svg {}
 
     #vision {
         display: flex;
@@ -86,8 +85,24 @@
         width: 100vw;
         overflow: hidden;
         display: flex;
+        flex-direction: column;
         background-color: #CDDC39;
         pointer-events: all;
+    }
+
+    .vision-maps {
+        display: flex;
+        flex-direction: row;
+        display: flex;
+    }
+
+    .vision-map-item {
+        width: 33vw;
+    }
+
+
+    .vision-map-item img {
+        width: 100%;
     }
     </style>
 </head>
@@ -101,7 +116,42 @@
     </section>
     <section id="vision" class="closed">
         <div class="container toggle-vision">
-            Aenean lacinia bibendum nulla sed consectetur. Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Nullam id dolor id nibh ultricies vehicula ut id elit. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Maecenas sed diam eget risus varius blandit sit amet non magna. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+            <div>
+                <h2>La mobilità 2050 utilizzerà la rete stradale esistente, massimizzandone ii potenziale grazie a sistemi di trasporto collettivi driverless.</h2>
+                <p>Velocità e capacità dei sistemi sarà funzione della gerarchia delle strade percorse: le reti autostradali percorse da servizi ad alta velocità e capacità e le reti secondarie e locali che permetteranno invece di coprire ii territorio, fino alle aree interne, innervandosi e garantendo un'accessibilita isotropica all'ltalia</p>
+            </div>
+            <div class="vision-maps">
+                <div class="vision-map-item">
+                    <img src="assets/vision/strade1.png">
+                    <p>La rete primaria, le autostrade</p>
+                </div>
+                <div class="vision-map-item">
+                    <img src="assets/vision/strade2.png">
+                    <p>La rete primaria, le autostrade</p>
+                </div>
+                <div class="vision-map-item">
+                    <img src="assets/vision/strade3.png">
+                    <p>La rete primaria, le autostrade</p>
+                </div>
+            </div>
+            <div>
+                <h2>La natura stessa delle reti primarie e anche secondarie è legata ai territori dei grandi e medi centri, connessi e serviti da numerose alternative in termini di mobilità collettiva, oltre che privata.</h2>
+                <p>La sfida della visione 2050 è raggiungere, coprire, riconnettere e riportare sulla mappa con servizi di mobilità efficienti centinaia di centri abitati che fanno parte delle Aree lnterne e che - insieme - fanno ii nostro paese.</p>
+            </div>
+            <div class="vision-maps">
+                <div class="vision-map-item">
+                    <img src="assets/vision/comuni1.png">
+                    <p>La rete primaria, le autostrade</p>
+                </div>
+                <div class="vision-map-item">
+                    <img src="assets/vision/comuni2.png">
+                    <p>La rete primaria, le autostrade</p>
+                </div>
+                <div class="vision-map-item">
+                    <img src="assets/vision/comuni3.png">
+                    <p>La rete primaria, le autostrade</p>
+                </div>
+            </div>
         </div>
     </section>
     <script src="https://d3js.org/d3.v5.min.js"></script>
