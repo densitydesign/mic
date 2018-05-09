@@ -24,25 +24,42 @@ d3.select(window).on('resize', function() {
     setRatio()
 });
 
-let morphology = svg.append('rect')
+let morphologyBG = svg.append('rect')
     .attr('class', 'morphology')
-    .attr('width', '100%')
-    .attr('height', '100%')
+    .attr('width', svgWidth)
+    .attr('height', svgHeight)
     .attr('x', 0)
     .attr('y', 0)
     .attr('fill', '#17202A')
+
+let morphology = svg.append("svg:image")
+    .attr('x', 0)
+    .attr('y', -0)
+    .attr('width', svgWidth)
+    .attr('height', svgHeight)
+    .attr("xlink:href", "assets/morphology.png")
 
 let rails = svg.append('g')
     .attr('class', 'rails')
     .attr('mask', 'url(#hole-mask)');
 
-// svg.append('use')
-//     .attr('xlink:href', '#g-circles-shape')
-//     .attr('overflow', 'visible')
+let railsNetwork = svg.append("svg:image")
+    .attr('x', 0)
+    .attr('y', -0)
+    .attr('width', svgWidth)
+    .attr('height', svgHeight)
+    .attr("xlink:href", "assets/rail.png")
 
 let road = svg.append('g')
     .attr('class', 'roads')
     .attr('mask', 'url(#circle-mask)');
+
+let roadsNetwork = svg.append("svg:image")
+    .attr('x', 0)
+    .attr('y', -0)
+    .attr('width', svgWidth)
+    .attr('height', svgHeight)
+    .attr("xlink:href", "assets/road.png")
 
 let cityNames = svg.append('g')
     .attr('class', 'city-names');
@@ -112,14 +129,6 @@ d3.selectAll('.toggle-vision')
                 return !d3.select(this).classed("closed");
             });
     })
-    // .on('touchstart', function(d) {
-    //     if (d3.event.touches.length < 2) {
-    //         d3.select("#vision")
-    //             .classed("closed", function(d, i) {
-    //                 return !d3.select(this).classed("closed");
-    //             });
-    //     }
-    // })
 
 let defs = svg.append('defs');
 
