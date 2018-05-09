@@ -4,6 +4,7 @@ let svg = d3.select('body > svg'),
     ratio = 1,
     radius = svgWidth * 0.04;
 
+// Handle screen resolutions
 function setRatio() {
     let width = window.innerWidth;
     let height = window.innerHeight;
@@ -17,9 +18,7 @@ function setRatio() {
     ratio = 1080 / svgWidth;
     svg.attr('width', svgWidth).attr('height', svgHeight)
 }
-
 setRatio();
-
 d3.select(window).on('resize', function() {
     setRatio()
 });
@@ -61,13 +60,16 @@ let roadsNetwork = svg.append("svg:image")
     .attr('height', svgHeight)
     .attr("xlink:href", "assets/road.png")
 
+let sexyCircles = svg.append('g')
+    .attr('class', 'sexy-circles');
+
 let cityNames = svg.append('g')
     .attr('class', 'city-names');
 
 d3.xml('assets/layer-names-01.svg')
     .then(function(vectors) {
 
-        d3.select(vectors).select('svg').selectAll('g').each(function() {
+        d3.select(vectors).selectAll('svg > g').each(function() {
             d3.select('.city-names').node().appendChild(this)
         })
 
@@ -85,23 +87,90 @@ d3.xml('assets/layer-names-01.svg')
 
     })
 
+// Handle city selection
+let selectedCity;
 let loadVectors = function(cityName) {
-    d3.xml(`assets/${cityName}.svg`)
-        .then(function(vectors) {
-
-            d3.select('.rails').selectAll('*').remove();
-            d3.select('.roads').selectAll('*').remove();
-
-            d3.select(vectors).select('svg').select('#rail').selectAll('*').each(function() {
-                d3.select('.rails').node().appendChild(this)
+    if (selectedCity != cityName) {
+        selectedCity = cityName;
+        d3.xml(`assets/${cityName}.svg`)
+            .then(function(vectors) {
+                removeIsochronousVectors();
+                d3.select(vectors).selectAll('svg > #rail > *').each(function(d, i) {
+                    let thisElement = d3.select('.rails').node().appendChild(this);
+                    d3.select(thisElement)
+                        .style('opacity', 1e-6)
+                        .transition()
+                        .delay((16 - i) * 50)
+                        .duration(500)
+                        .style('opacity', 1);
+                })
+                d3.select(vectors).selectAll('svg > #road > g').each(function(d, i) {
+                    let thisElement = d3.select('.roads').node().appendChild(this);
+                    d3.select(thisElement)
+                        .style('opacity', 1e-6)
+                        .transition()
+                        .delay((16 - i) * 50)
+                        .duration(500)
+                        .style('opacity', 1);
+                })
             })
-
-            d3.select(vectors).select('svg').select('#road').selectAll('*').each(function() {
-                d3.select('.roads').node().appendChild(this)
-            })
-        })
+    }
 }
 
+let removeIsochronousVectors = function() {
+    console.log('remove vectors');
+    idleTime = 0;
+
+    d3.selectAll('.rails > *')
+        .transition()
+        .duration(500)
+        .delay(function(d, i) {
+            return i * 20;
+        })
+        .style('opacity', 1e-6)
+        .remove();
+
+    d3.selectAll('.roads > *')
+        .transition()
+        .duration(500)
+        .delay(function(d, i) {
+            return i * 20;
+        })
+        .style('opacity', 1e-6)
+        .remove();
+}
+
+
+// Handle idle time
+let idle = true;
+let idleTime = 0;
+let idleInterval = setInterval(timerIncrement, 2000); // Count seconds
+function timerIncrement() {
+    idleTime = idleTime + 2;
+    if (idleTime >= 20) {
+        removeIsochronousVectors();
+    }
+    console.log(idleTime)
+
+    if (idle) {
+        sexyCircles.append('circle')
+            .attr('cx', svgWidth / 2)
+            .attr('cy', svgHeight / 2)
+            .attr('r', 0)
+            .style('fill', 'transparent')
+            .style('fill', 'transparent')
+            .style('stroke', 'white')
+            .style('opacity', 1)
+            .transition()
+                .duration(6000)
+                .ease(d3.easeCubicOut)
+                .attr('r', 500)
+                .style('opacity', 1e-6)
+            .remove();
+    }
+}
+
+// Handle interactions
 d3.select('#present')
     .on('click', function() {
         d3.select('.rails').attr('mask', 'url(#hole-mask)');
@@ -194,6 +263,7 @@ svg.on('touchstart', function(d) {
 
 
 function onStart() {
+    idleTime = 0;
     holeMaskCircles = holeMaskCircles.data(myTouches, function(d) { return d.identifier; })
     holeMaskCircles.exit().remove();
     holeMaskCircles = holeMaskCircles.enter().append('circle')
@@ -243,6 +313,7 @@ function onStart() {
 }
 
 function onMove() {
+    idleTime = 0;
     holeMaskCircles.data(myTouches, function(d) { return d.identifier; })
         .attr('cx', function(d) { return d.clientX * ratio; })
         .attr('cy', function(d) { return d.clientY * ratio; })
