@@ -104,7 +104,7 @@ let loadVectors = function(cityName) {
                     d3.select(thisElement)
                         .style('opacity', 1e-6)
                         .transition()
-                        .delay((16 - i) * 50)
+                        .delay((16 - i) * 25)
                         .duration(500)
                         .style('opacity', 1);
                 })
@@ -113,7 +113,7 @@ let loadVectors = function(cityName) {
                     d3.select(thisElement)
                         .style('opacity', 1e-6)
                         .transition()
-                        .delay((16 - i) * 50)
+                        .delay((16 - i) * 25)
                         .duration(500)
                         .style('opacity', 1);
                 })
@@ -126,7 +126,7 @@ let removeIsochronousVectors = function() {
     // idleTime = 0;
     d3.selectAll('.rails > *')
         .transition()
-        .duration(500)
+        .duration(250)
         .delay(function(d, i) {
             return i * 20;
         })
@@ -135,7 +135,7 @@ let removeIsochronousVectors = function() {
 
     d3.selectAll('.roads > *')
         .transition()
-        .duration(500)
+        .duration(250)
         .delay(function(d, i) {
             return i * 20;
         })
