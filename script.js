@@ -1,17 +1,17 @@
 let svg = d3.select('body > svg'),
     svgWidth = 1080,
-    svgHeight = 1920,
+    svgHeight = 1560,
     ratio = 1,
     radius = svgWidth * 0.04;
 
 function setRatio() {
     let width = window.innerWidth;
     let height = window.innerHeight;
-    if (width <= height * (1080 / 1920)) {
+    if (width <= height * (1080 / 1560)) {
         svgWidth = width;
-        svgHeight = width * (1920 / 1080);
+        svgHeight = width * (1560 / 1080);
     } else {
-        svgWidth = height / (1920 / 1080);
+        svgWidth = height / (1560 / 1080);
         svgHeight = height;
     }
     ratio = 1080 / svgWidth;
@@ -61,7 +61,9 @@ d3.xml('assets/layer-names-01.svg')
         })
         .on('touchstart', function(d) {
             let thisId = d3.select(this).attr('id');
-            loadVectors(thisId)
+            if (d3.event.touches.length < 2) {
+               loadVectors(thisId); 
+            }        
         })
 
     })
