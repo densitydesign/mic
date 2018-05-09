@@ -55,16 +55,16 @@ d3.xml('assets/layer-names-01.svg')
         })
 
         d3.selectAll('.city-names > g')
-        .on('click', function(d) {
-            let thisId = d3.select(this).attr('id');
-            loadVectors(thisId)
-        })
-        .on('touchstart', function(d) {
-            let thisId = d3.select(this).attr('id');
-            if (d3.event.touches.length < 2) {
-               loadVectors(thisId); 
-            }        
-        })
+            .on('click', function(d) {
+                let thisId = d3.select(this).attr('id');
+                loadVectors(thisId)
+            })
+            .on('touchstart', function(d) {
+                let thisId = d3.select(this).attr('id');
+                if (d3.event.touches.length < 2) {
+                    loadVectors(thisId);
+                }
+            })
 
     })
 
@@ -104,6 +104,22 @@ d3.select('#future')
         d3.select('.rails').attr('mask', 'url(#circle-mask)');
         d3.select('.roads').attr('mask', 'url(#hole-mask)');
     })
+
+d3.selectAll('.toggle-vision')
+    .on('click', function() {
+        d3.select("#vision")
+            .classed("closed", function(d, i) {
+                return !d3.select(this).classed("closed");
+            });
+    })
+    // .on('touchstart', function(d) {
+    //     if (d3.event.touches.length < 2) {
+    //         d3.select("#vision")
+    //             .classed("closed", function(d, i) {
+    //                 return !d3.select(this).classed("closed");
+    //             });
+    //     }
+    // })
 
 let defs = svg.append('defs');
 
