@@ -24,9 +24,8 @@ d3.select(window).on('resize', function() {
 });
 
 // Load SVG
-
 let vectors;
-d3.xml('assets/italia-01.svg')
+d3.xml('assets/italia-1-01.svg')
     .then(function(loadedSVG) {
 
         console.log(loadedSVG);
@@ -65,17 +64,20 @@ d3.xml('assets/italia-01.svg')
         let cities = d3.select(loadedSVG).selectAll('svg > g:not(#city-labels)').each(function(d, i) {
             // console.log(this);
             let thisCity = d3.select(this).attr('id')
-            d3.select(this).selectAll('g').each(function(d, i) {
-                // console.log(i, this);
+            d3.select(this).selectAll(':scope > g').each(function(d, i) {
                 d3.select(this)
                     .classed(thisCity, true)
                     .style('display', 'none')
                     .style('opacity', 1e-6);
 
                 if (i == 0) {
-                    d3.select('g.roads').node().appendChild(this);
+                    d3.select('g.roads')
+                        .node()
+                        .appendChild(this);
                 } else {
-                    d3.select('g.rails').node().appendChild(this);
+                    d3.select('g.rails')
+                        .node()
+                        .appendChild(this);
                 }
 
             })
@@ -122,7 +124,7 @@ let showVectors = function(cityName) {
 
         // removeIsochronousVectors();
 
-        console.log('show new vectors for', cityName);
+        console.log('show', cityName);
         // console.log(vectors);
 
         d3.selectAll(`.rails > *:not(.${cityName})`)
@@ -132,9 +134,6 @@ let showVectors = function(cityName) {
             .on('end', function() {
                 d3.select(this).style('display', 'none')
             })
-
-        
-
         d3.selectAll(`.roads > *:not(.${cityName})`)
             .transition()
             .duration(1000)
@@ -145,15 +144,35 @@ let showVectors = function(cityName) {
 
         d3.select('.rails').selectAll(`.${cityName}`)
             .style('display', 'block')
-            .transition()
-            .duration(1500)
             .style('opacity', 1);
+
+        let railsGeometries = d3.select('.rails').selectAll(`.${cityName} > *`);
+        console.log(railsGeometries.size())
+        railsGeometries
+            .style('opacity', 1e-6)
+            .transition()
+            .duration(500)
+            .delay(function(d, i) {
+                return (railsGeometries.size() - i) * 10
+            })
+            .style('opacity', 1)
+
 
         d3.select('.roads').selectAll(`.${cityName}`)
             .style('display', 'block')
-            .transition()
-            .duration(1500)
             .style('opacity', 1);
+
+        let roadsGeometries = d3.select('.roads').selectAll(`.${cityName} > *`);
+        console.log(roadsGeometries.size())
+        roadsGeometries
+            .style('opacity', 1e-6)
+            .transition()
+            .duration(500)
+            .delay(function(d, i) {
+                return (roadsGeometries.size() - i) * 10
+            })
+            .style('opacity', 1)
+
     }
 }
 
