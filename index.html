@@ -30,6 +30,14 @@
         font-weight: 600;
     }
 
+
+    @font-face {
+        font-family: "Work Sans";
+        src: url("fonts/Work_Sans/WorkSans-ExtraLight-export/WorkSans-ExtraLight.woff2") format("woff2"), url("fonts/Work_Sans/WorkSans-ExtraLight-export/WorkSans-ExtraLight.woff") format("woff"), url("fonts/Work_Sans/WorkSans-ExtraLight-export/WorkSans-ExtraLight.otf") format("opentype");
+        font-style: normal;
+        font-weight: 200;
+    }
+
     html {
         font-size: 19px;
     }
@@ -47,6 +55,10 @@
     }
 
     svg {}
+
+    .semibold {
+        font-weight: 500;
+    }
 
     #vision {
         display: flex;
@@ -86,10 +98,20 @@
         overflow: hidden;
         display: flex;
         flex-flow: row wrap;
-
+        text-align: left;
         background-color: black;
         pointer-events: all;
     }
+
+
+    #close-button {
+        width: 4%;
+        height: 4%;
+       
+        border-radius: 30%;
+        border: white solid 1px;
+    }
+
 
 
     .vision-maps {
@@ -100,6 +122,24 @@
     .vision-txt,
     .vision-maps {
         padding: 0 6% 0 6%;
+        font-family: "Work Sans";
+    }
+
+
+    .vision-txt h2 {
+
+        font-weight: 200;
+        font-size: 1.7rem;
+        letter-spacing: 0.12rem;
+        line-height: 2.1rem;
+    }
+
+    .vision-txt p {
+
+        font-weight: 200;
+        font-size: 1.2rem;
+        letter-spacing: 0.1rem;
+        line-height: 1.6rem;
     }
 
     .vision-map-item {}
@@ -108,12 +148,15 @@
     .vision-map-item img {
         width: 100%;
     }
+
+    .vision-map-item p {
+        font-size: 1rem;
+    }
     </style>
 </head>
 
 <body>
     <svg x="0px" y="0px" viewBox="0 0 1080 1560">
-        
     </svg>
     <section style="">
         <span id="present">Present</span>
@@ -121,9 +164,10 @@
         <span class="toggle-vision">Vision</span>
     </section>
     <section id="vision" class="closed">
-        <div class="container toggle-vision">
+        <div class="container">
+            <span id="close-button" class="toggle-vision">X</span>
             <div class="vision-txt">
-                <h2>La mobilità 2050 utilizzerà la rete stradale esistente, massimizzandone ii potenziale grazie a sistemi di trasporto collettivi driverless.</h2>
+                <h2>La mobilità 2050 utilizzerà la rete stradale esistente, massimizzandone ii potenziale grazie a sistemi di trasporto collettivi <span class="semibold">driverless</span>.</h2>
                 <p>Velocità e capacità dei sistemi sarà funzione della gerarchia delle strade percorse: le reti autostradali percorse da servizi ad alta velocità e capacità e le reti secondarie e locali che permetteranno invece di coprire ii territorio, fino alle aree interne, innervandosi e garantendo un'accessibilita isotropica all'ltalia</p>
             </div>
             <div class="vision-maps">
@@ -147,15 +191,15 @@
             <div class="vision-maps">
                 <div class="vision-map-item">
                     <img src="assets/vision/comuni1.png">
-                    <p>La rete primaria, le autostrade</p>
+                    <p>I grandi centri, sopra i 100.000 abitanti</p>
                 </div>
                 <div class="vision-map-item">
                     <img src="assets/vision/comuni2.png">
-                    <p>La rete primaria, le autostrade</p>
+                    <p>Le città sotto i 100.000 abitanti</p>
                 </div>
                 <div class="vision-map-item">
                     <img src="assets/vision/comuni3.png">
-                    <p>La rete primaria, le autostrade</p>
+                    <p>I luoghi dell’arcipelago</p>
                 </div>
             </div>
         </div>
