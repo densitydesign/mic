@@ -25,13 +25,13 @@ d3.select(window).on('resize', function() {
 
 // Load SVG
 let vectors;
-d3.xml('assets/italia-1-01.svg')
+d3.xml('assets/italia-2-01.svg')
     .then(function(loadedSVG) {
 
         console.log(loadedSVG);
 
         vectors = loadedSVG;
-        d3.select(loadedSVG).selectAll('svg > image').each(function() {
+        d3.select(loadedSVG).select('svg > #sfondo').each(function() {
             svg.node().appendChild(this);
         })
 
@@ -57,20 +57,18 @@ d3.xml('assets/italia-1-01.svg')
             .attr('height', svgHeight)
             .attr("xlink:href", "assets/road.png")
 
-        d3.select(loadedSVG).selectAll('svg > #city-labels').each(function() {
+        d3.select(loadedSVG).selectAll('svg > #label').each(function() {
             svg.node().appendChild(this);
         })
 
-        let cities = d3.select(loadedSVG).selectAll('svg > g:not(#city-labels)').each(function(d, i) {
+        let cities = d3.select(loadedSVG).selectAll('svg > g:not(#label)').each(function(d, i) {
             // console.log(this);
             let thisCity = d3.select(this).attr('id')
             d3.select(this).selectAll(':scope > g').each(function(d, i) {
                 d3.select(this)
                     .classed(thisCity, true)
-                    .style('display', 'none')
-                    .style('opacity', 1e-6);
 
-                if (i == 0) {
+                if (i == 1) {
                     d3.select('g.roads')
                         .node()
                         .appendChild(this);
@@ -80,11 +78,18 @@ d3.xml('assets/italia-1-01.svg')
                         .appendChild(this);
                 }
 
+                d3.selectAll('g.roads > g > *')
+                    .style('display', 'none')
+                    .style('opacity', 1e-6);
+
+                d3.selectAll('g.rails > g > *')
+                    .style('display', 'none')
+                    .style('opacity', 1e-6);
+
             })
         });
 
-        d3.select('svg > g#city-labels')
-            // .style('opacity', 1)
+        d3.select('svg > g#label')
             .selectAll('g')
             .on('click', function(d) {
                 let thisId = d3.select(this).attr('id');
@@ -101,7 +106,7 @@ d3.xml('assets/italia-1-01.svg')
                 }
             })
 
-        d3.selectAll('svg > g#city-labels text').attr('filter', 'url(#dropshadow)')
+        d3.selectAll('svg > g#label text').attr('filter', 'url(#dropshadow)')
 
     })
 
@@ -122,19 +127,16 @@ let showVectors = function(cityName) {
     if (selectedCity != cityName) {
         selectedCity = cityName;
 
-        // removeIsochronousVectors();
-
         console.log('show', cityName);
-        // console.log(vectors);
 
-        d3.selectAll(`.rails > *:not(.${cityName})`)
+        d3.selectAll(`.rails > g:not(.${cityName}) > *`)
             .transition()
             .duration(500)
             .style('opacity', 1e-6)
             .on('end', function() {
                 d3.select(this).style('display', 'none')
             })
-        d3.selectAll(`.roads > *:not(.${cityName})`)
+        d3.selectAll(`.roads > g:not(.${cityName}) > *`)
             .transition()
             .duration(1000)
             .style('opacity', 1e-6)
@@ -142,12 +144,11 @@ let showVectors = function(cityName) {
                 d3.select(this).style('display', 'none')
             })
 
-        d3.select('.rails').selectAll(`.${cityName}`)
+        d3.select('.rails').selectAll(`.${cityName} > *`)
             .style('display', 'block')
             .style('opacity', 1);
 
         let railsGeometries = d3.select('.rails').selectAll(`.${cityName} > *`);
-        console.log(railsGeometries.size())
         railsGeometries
             .style('opacity', 1e-6)
             .transition()
@@ -158,12 +159,11 @@ let showVectors = function(cityName) {
             .style('opacity', 1)
 
 
-        d3.select('.roads').selectAll(`.${cityName}`)
+        d3.select('.roads').selectAll(`.${cityName} > *`)
             .style('display', 'block')
             .style('opacity', 1);
 
         let roadsGeometries = d3.select('.roads').selectAll(`.${cityName} > *`);
-        console.log(roadsGeometries.size())
         roadsGeometries
             .style('opacity', 1e-6)
             .transition()
@@ -172,17 +172,13 @@ let showVectors = function(cityName) {
                 return (roadsGeometries.size() - i) * 10
             })
             .style('opacity', 1)
-
     }
 }
 
 let removeIsochronousVectors = function() {
     console.log('hide vectors');
-    // idleTime = 0;
 
-    let allCities = d3.selectAll('svg > g:not(#city-labels)');
-
-    d3.selectAll(`.rails > *`)
+    d3.selectAll(`.rails > g > *`)
         .transition()
         .duration(500)
         .style('opacity', 1e-6)
@@ -190,7 +186,7 @@ let removeIsochronousVectors = function() {
             d3.select(this).style('display', 'none')
         })
 
-    d3.selectAll(`.roads > *`)
+    d3.selectAll(`.roads > g > *`)
         .transition()
         .duration(1000)
         .style('opacity', 1e-6)
@@ -198,62 +194,6 @@ let removeIsochronousVectors = function() {
             d3.select(this).style('display', 'none')
         })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let morphologyBG = svg.append('rect')
-//     .attr('class', 'morphology')
-//     .attr('width', svgWidth)
-//     .attr('height', svgHeight)
-//     .attr('x', 0)
-//     .attr('y', 0)
-//     .attr('fill', '#17202A')
-
-// let morphology = svg.append("svg:image")
-//     .attr('x', 0)
-//     .attr('y', -0)
-//     .attr('width', svgWidth)
-//     .attr('height', svgHeight)
-//     .attr("xlink:href", "assets/morphology.png")
-
-// let rails = svg.append('g')
-//     .attr('class', 'rails')
-//     .attr('mask', 'url(#hole-mask)');
-
-// let railsNetwork = svg.append("svg:image")
-//     .attr('x', 0)
-//     .attr('y', -0)
-//     .attr('width', svgWidth)
-//     .attr('height', svgHeight)
-//     .attr("xlink:href", "assets/rail.png")
-
-// let road = svg.append('g')
-//     .attr('class', 'roads')
-//     .attr('mask', 'url(#circle-mask)');
-
-// let roadsNetwork = svg.append("svg:image")
-//     .attr('x', 0)
-//     .attr('y', -0)
-//     .attr('width', svgWidth)
-//     .attr('height', svgHeight)
-//     .attr("xlink:href", "assets/road.png")
-
-// let sexyCircles = svg.append('g')
-//     .attr('class', 'sexy-circles');
-
-// let cityNames = svg.append('g')
-//     .attr('class', 'city-names');
 
 // d3.xml('assets/layer-names-01.svg')
 //     .then(function(vectors) {
