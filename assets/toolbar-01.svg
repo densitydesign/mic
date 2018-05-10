@@ -11,11 +11,9 @@
     <text transform="translate(332 170)" style="isolation: isolate;font-size: 14px;fill: #fff;font-family: Work Sans">toccando l<tspan x="73.289" y="0">a</tspan><tspan x="80.905" y="0" style="white-space: pre"> mapp</tspan><tspan x="124.654" y="0">a</tspan></text>
     <text transform="translate(669 150)" style="isolation: isolate;font-size: 14px;fill: #fff;font-family: Work Sans">Scopri di più:</text>
   </g>
-  <g id="button-vision" class="toggle-vision">
+  <g id="button-vision">
     <rect id="Background" x="669" y="186" width="93" height="43" rx="8" ry="8" style="fill: none;stroke: #9b9b9b"/>
-    <text transform="translate(685 212)" style="isolation: isolate;font-size: 17px;fill: #fff;font-family: Work Sans">VISIO</text>
-    <text transform="translate(734.342 212)" style="font-size: 17px;fill: #fff;font-family: Work Sans"> </text>
-    <text transform="translate(734.343 212)" style="isolation: isolate;font-size: 17px;fill: #fff;font-family: Work Sans">N</text>
+    <text transform="translate(684.62 212)" style="isolation: isolate;font-size: 17px;fill: #fff;font-family: Work Sans">VISION</text>
   </g>
   <g id="legend">
     <text transform="translate(858 150)" style="isolation: isolate;font-size: 14px;fill: #fff;font-family: Work Sans">L<tspan x="8.176" y="0">egend</tspan><tspan x="49.686" y="0">a</tspan></text>
@@ -38,10 +36,12 @@
   </g>
   <g id="button-2018">
     <rect id="Background-2" data-name="Background" x="39" y="186" width="83" height="43" rx="8" ry="8" style="fill: #e5e5e5;stroke: #000"/>
-    <text transform="translate(61.045 213)" style="isolation: isolate;font-size: 17px;font-family: Work Sans">2018</text>
+    <text transform="translate(60.559 213)" style="isolation: isolate;font-size: 17px;font-family: Work Sans">2018</text>
   </g>
   <g id="button-2050">
-    <rect id="Background-Copy" x="144" y="186" width="83" height="43" rx="8" ry="8" style="fill: none;stroke: #9b9b9b"/>
-    <text transform="translate(163.523 213)" style="isolation: isolate;font-size: 17px;fill: #fff;font-family: Work Sans">2050</text>
+    <rect id="Background-Copy" x="144" y="186" width="83" height="43" rx="8" ry="8" style="fill: none;stroke: #e5e5e5"/>
+    <text transform="translate(164.038 213)" style="isolation: isolate;font-size: 17px;fill: #fff;font-family: Work Sans">2050</text>
   </g>
+  <line x2="1080" style="fill: none;stroke: #828282;stroke-width: 2px"/>
+  <line x1="810.901" x2="810.901" y2="362" style="fill: none;stroke: #828282"/>
 </svg>
