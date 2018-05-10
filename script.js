@@ -25,7 +25,7 @@ d3.select(window).on('resize', function() {
 
 // Load SVG
 let vectors;
-d3.xml('assets/italia-2-01.svg')
+d3.xml('assets/italia-3-01.svg')
     .then(function(loadedSVG) {
 
         console.log(loadedSVG);
@@ -131,14 +131,14 @@ let showVectors = function(cityName) {
 
         d3.selectAll(`.rails > g:not(.${cityName}) > *`)
             .transition()
-            .duration(500)
+            .duration(350)
             .style('opacity', 1e-6)
             .on('end', function() {
                 d3.select(this).style('display', 'none')
             })
         d3.selectAll(`.roads > g:not(.${cityName}) > *`)
             .transition()
-            .duration(1000)
+            .duration(350)
             .style('opacity', 1e-6)
             .on('end', function() {
                 d3.select(this).style('display', 'none')
@@ -180,7 +180,7 @@ let removeIsochronousVectors = function() {
 
     d3.selectAll(`.rails > g > *`)
         .transition()
-        .duration(500)
+        .duration(1000)
         .style('opacity', 1e-6)
         .on('end', function() {
             d3.select(this).style('display', 'none')
@@ -195,69 +195,47 @@ let removeIsochronousVectors = function() {
         })
 }
 
-// d3.xml('assets/layer-names-01.svg')
-//     .then(function(vectors) {
+// Handle idle time
+let idle = true;
+let idleTime = 0;
+let secondsInterval = 2;
+let idleInterval = setInterval(timerIncrement, secondsInterval * 1000); // Count seconds
+let sexyCircleCount = 0;
 
-//         d3.select(vectors).selectAll('svg > g').each(function() {
-//             d3.select('.city-names').node().appendChild(this)
-//         })
+timerIncrement(); // run imediately only the first time
+function timerIncrement() {
+    idleTime = idleTime + secondsInterval;
+    if (idleTime >= 20) {
+        removeIsochronousVectors();
+        idle = true;
+        let idleTime = 0;
+    }
+    console.log(idleTime, idle)
 
-//         d3.selectAll('.city-names text').attr('filter', 'url(#dropshadow)')
+    if (idle) {
+        console.log(d3.selectAll('g#label > g').select('circle').size())
 
-//         d3.selectAll('.city-names > g')
-//             .on('click', function(d) {
-//                 let thisId = d3.select(this).attr('id');
-//                 loadVectors(thisId);
-//                 idle = false;
-//             })
-//             .on('touchstart', function(d) {
-//                 let thisId = d3.select(this).attr('id');
-//                 if (d3.event.touches.length < 2) {
-//                     loadVectors(thisId);
-//                     idle = false;
-//                 }
-//             })
-//     })
-
-
-// // Handle idle time
-// let idle = true;
-// let idleTime = 0;
-// let secondsInterval = 2;
-// let idleInterval = setInterval(timerIncrement, secondsInterval * 1000); // Count seconds
-// let sexyCircleCount = 0;
-
-// timerIncrement(); // run imediately only the first time
-// function timerIncrement() {
-//     idleTime = idleTime + secondsInterval;
-//     if (idleTime >= 20) {
-//         removeIsochronousVectors();
-//         idle = true;
-//     }
-//     // console.log(idleTime, idle)
-
-//     if (idle) {
-//         d3.selectAll('g.city-names > g').select('circle').filter(function(d, i) { return i == sexyCircleCount })
-//             .attr('r', 0)
-//             .style('fill', 'transparent')
-//             .style('fill', 'transparent')
-//             .style('stroke', '#ffffff')
-//             // .style('stroke', '#faf7c1')
-//             .style('pointer-events', 'none')
-//             .style('stroke-width', 2)
-//             .style('opacity', 1)
-//             .transition()
-//             .duration(4000)
-//             .ease(d3.easeCubicOut)
-//             // .style('stroke','#342364')                
-//             .attr('r', 400)
-//             .style('opacity', 1e-6);
-//         sexyCircleCount++;
-//         if (sexyCircleCount >= d3.selectAll('g.city-names > g').select('circle').size()) {
-//             sexyCircleCount = 0;
-//         }
-//     }
-// }
+        d3.selectAll('g#label > g').select('circle').filter(function(d, i) { return i == sexyCircleCount })
+            .attr('r', 0)
+            .style('fill', 'transparent')
+            .style('fill', 'transparent')
+            .style('stroke', '#ffffff')
+            // .style('stroke', '#faf7c1')
+            .style('pointer-events', 'none')
+            .style('stroke-width', 2)
+            .style('opacity', 1)
+            .transition()
+            .duration(4000)
+            .ease(d3.easeCubicOut)
+            // .style('stroke','#342364')                
+            .attr('r', 400)
+            .style('opacity', 1e-6);
+        sexyCircleCount++;
+        if (sexyCircleCount >= d3.selectAll('g#label > g').select('circle').size()) {
+            sexyCircleCount = 0;
+        }
+    }
+}
 
 // Handle interactions with buttons
 d3.select('#present')
@@ -365,6 +343,7 @@ svg.on('touchstart', function(d) {
 
 function onStart() {
     idleTime = 0;
+    idle = false;
     holeMaskCircles = holeMaskCircles.data(myTouches, function(d) { return d.identifier; })
     holeMaskCircles.exit().remove();
     holeMaskCircles = holeMaskCircles.enter().append('circle')
@@ -415,6 +394,7 @@ function onStart() {
 
 function onMove() {
     idleTime = 0;
+    idle = false;
     holeMaskCircles.data(myTouches, function(d) { return d.identifier; })
         .attr('cx', function(d) { return d.clientX * ratio; })
         .attr('cy', function(d) { return d.clientY * ratio; })
