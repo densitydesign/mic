@@ -29,12 +29,12 @@ let vectors;
 d3.xml('assets/italia-01.svg')
     .then(function(loadedSVG) {
 
-        // console.log(loadedSVG);
+        console.log(loadedSVG);
 
         vectors = loadedSVG;
-        // d3.select(loadedSVG).selectAll('svg > image').each(function() {
-        //     svg.node().appendChild(this);
-        // })
+        d3.select(loadedSVG).selectAll('svg > image').each(function() {
+            svg.node().appendChild(this);
+        })
 
         let rails = svg.append('g')
             .attr('class', 'rails')
@@ -62,6 +62,25 @@ d3.xml('assets/italia-01.svg')
             svg.node().appendChild(this);
         })
 
+        let cities = d3.select(loadedSVG).selectAll('svg > g:not(#city-labels)').each(function(d, i) {
+            // console.log(this);
+            let thisCity = d3.select(this).attr('id')
+            d3.select(this).selectAll('g').each(function(d, i) {
+                // console.log(i, this);
+                d3.select(this)
+                    .classed(thisCity, true)
+                    .style('display', 'none')
+                    .style('opacity', 1e-6);
+
+                if (i == 0) {
+                    d3.select('g.roads').node().appendChild(this);
+                } else {
+                    d3.select('g.rails').node().appendChild(this);
+                }
+
+            })
+        });
+
         d3.select('svg > g#city-labels')
             // .style('opacity', 1)
             .selectAll('g')
@@ -84,6 +103,16 @@ d3.xml('assets/italia-01.svg')
 
     })
 
+function clone(selector) {
+    var node = d3.select(selector).node();
+    return d3.select(node.parentNode.insertBefore(node.cloneNode(true), node.nextSibling));
+}
+
+function cloneAll(selector) {
+    var node = d3.selectAll(selector).node();
+    return d3.selectAll(node.parentNode.insertBefore(node.cloneNode(true), node.nextSibling));
+}
+
 // Handle city selection
 let selectedCity;
 let showVectors = function(cityName) {
@@ -91,51 +120,40 @@ let showVectors = function(cityName) {
     if (selectedCity != cityName) {
         selectedCity = cityName;
 
-        removeIsochronousVectors();
+        // removeIsochronousVectors();
 
-        console.log('show new vectors');
-        console.log(vectors);
+        console.log('show new vectors for', cityName);
+        // console.log(vectors);
 
-        d3.select(vectors).selectAll(`#${cityName} > g > *`).each(function(d, i) {
-            let layer;
-            console.log(i)
-            if (i==0){layer = '.roads'} else {layer = '.rails'}
-            let thisElement = d3.select(layer).node().appendChild(this);      
-            d3.select(thisElement)
-                .style('opacity', 1e-6)
-                .transition()
-                .delay(function(d,i){
-                    console.log(i);
-                    return i
-                })
-                .duration(1500)
-                .style('opacity', 1);
-        })
+        d3.selectAll(`.rails > *:not(.${cityName})`)
+            .transition()
+            .duration(500)
+            .style('opacity', 1e-6)
+            .on('end', function() {
+                d3.select(this).style('display', 'none')
+            })
 
+        
 
+        d3.selectAll(`.roads > *:not(.${cityName})`)
+            .transition()
+            .duration(1000)
+            .style('opacity', 1e-6)
+            .on('end', function() {
+                d3.select(this).style('display', 'none')
+            })
 
-        // d3.xml(`assets/${cityName}.svg`)
-        //     .then(function(vectors) {
+        d3.select('.rails').selectAll(`.${cityName}`)
+            .style('display', 'block')
+            .transition()
+            .duration(1500)
+            .style('opacity', 1);
 
-        //         d3.select(vectors).selectAll('svg > #rail > *').each(function(d, i) {
-        //             let thisElement = d3.select('.rails').node().appendChild(this);
-        //             d3.select(thisElement)
-        //                 .style('opacity', 1e-6)
-        //                 .transition()
-        //                 .delay((16 - i) * 25)
-        //                 .duration(500)
-        //                 .style('opacity', 1);
-        //         })
-        //         d3.select(vectors).selectAll('svg > #road > g').each(function(d, i) {
-        //             let thisElement = d3.select('.roads').node().appendChild(this);
-        //             d3.select(thisElement)
-        //                 .style('opacity', 1e-6)
-        //                 .transition()
-        //                 .delay((16 - i) * 25)
-        //                 .duration(500)
-        //                 .style('opacity', 1);
-        //         })
-        //     })
+        d3.select('.roads').selectAll(`.${cityName}`)
+            .style('display', 'block')
+            .transition()
+            .duration(1500)
+            .style('opacity', 1);
     }
 }
 
@@ -145,23 +163,21 @@ let removeIsochronousVectors = function() {
 
     let allCities = d3.selectAll('svg > g:not(#city-labels)');
 
-    d3.selectAll('.rails > *')
+    d3.selectAll(`.rails > *`)
         .transition()
-        .duration(250)
-        .delay(function(d, i) {
-            return i * 20 *0;
-        })
+        .duration(500)
         .style('opacity', 1e-6)
-        .remove();
+        .on('end', function() {
+            d3.select(this).style('display', 'none')
+        })
 
-    d3.selectAll('.roads > *')
+    d3.selectAll(`.roads > *`)
         .transition()
-        .duration(250)
-        .delay(function(d, i) {
-            return i * 20*0 ;
-        })
+        .duration(1000)
         .style('opacity', 1e-6)
-        .remove();
+        .on('end', function() {
+            d3.select(this).style('display', 'none')
+        })
 }
 
 
@@ -284,34 +300,34 @@ let removeIsochronousVectors = function() {
 //     }
 // }
 
-// // Handle interactions
-// d3.select('#present')
-//     .on('click', function() {
-//         d3.select('.rails').attr('mask', 'url(#hole-mask)');
-//         d3.select('.roads').attr('mask', 'url(#circle-mask)');
-//     })
-//     .on('touchstart', function() {
-//         d3.select('.rails').attr('mask', 'url(#hole-mask)');
-//         d3.select('.roads').attr('mask', 'url(#circle-mask)');
-//     })
+// Handle interactions with buttons
+d3.select('#present')
+    .on('click', function() {
+        d3.select('g.rails').attr('mask', 'url(#hole-mask)');
+        d3.select('g.roads').attr('mask', 'url(#circle-mask)');
+    })
+    .on('touchstart', function() {
+        d3.select('g.rails').attr('mask', 'url(#hole-mask)');
+        d3.select('g.roads').attr('mask', 'url(#circle-mask)');
+    })
 
-// d3.select('#future')
-//     .on('click', function() {
-//         d3.select('.rails').attr('mask', 'url(#circle-mask)');
-//         d3.select('.roads').attr('mask', 'url(#hole-mask)');
-//     })
-//     .on('touchstart', function() {
-//         d3.select('.rails').attr('mask', 'url(#circle-mask)');
-//         d3.select('.roads').attr('mask', 'url(#hole-mask)');
-//     })
+d3.select('#future')
+    .on('click', function() {
+        d3.select('g.rails').attr('mask', 'url(#circle-mask)');
+        d3.select('g.roads').attr('mask', 'url(#hole-mask)');
+    })
+    .on('touchstart', function() {
+        d3.select('g.rails').attr('mask', 'url(#circle-mask)');
+        d3.select('g.roads').attr('mask', 'url(#hole-mask)');
+    })
 
-// d3.selectAll('.toggle-vision')
-//     .on('click', function() {
-//         d3.select("#vision")
-//             .classed("closed", function(d, i) {
-//                 return !d3.select(this).classed("closed");
-//             });
-//     })
+d3.selectAll('.toggle-vision')
+    .on('click', function() {
+        d3.select("#vision")
+            .classed("closed", function(d, i) {
+                return !d3.select(this).classed("closed");
+            });
+    })
 
 let defs = svg.append('defs');
 
