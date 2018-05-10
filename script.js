@@ -23,112 +23,133 @@ d3.select(window).on('resize', function() {
     setRatio()
 });
 
-let morphologyBG = svg.append('rect')
-    .attr('class', 'morphology')
-    .attr('width', svgWidth)
-    .attr('height', svgHeight)
-    .attr('x', 0)
-    .attr('y', 0)
-    .attr('fill', '#17202A')
+// Load SVG
 
-let morphology = svg.append("svg:image")
-    .attr('x', 0)
-    .attr('y', -0)
-    .attr('width', svgWidth)
-    .attr('height', svgHeight)
-    .attr("xlink:href", "assets/morphology.png")
+let vectors;
+d3.xml('assets/italia-01.svg')
+    .then(function(loadedSVG) {
 
-let rails = svg.append('g')
-    .attr('class', 'rails')
-    .attr('mask', 'url(#hole-mask)');
+        // console.log(loadedSVG);
 
-let railsNetwork = svg.append("svg:image")
-    .attr('x', 0)
-    .attr('y', -0)
-    .attr('width', svgWidth)
-    .attr('height', svgHeight)
-    .attr("xlink:href", "assets/rail.png")
+        vectors = loadedSVG;
+        // d3.select(loadedSVG).selectAll('svg > image').each(function() {
+        //     svg.node().appendChild(this);
+        // })
 
-let road = svg.append('g')
-    .attr('class', 'roads')
-    .attr('mask', 'url(#circle-mask)');
+        let rails = svg.append('g')
+            .attr('class', 'rails')
+            .attr('mask', 'url(#hole-mask)');
 
-let roadsNetwork = svg.append("svg:image")
-    .attr('x', 0)
-    .attr('y', -0)
-    .attr('width', svgWidth)
-    .attr('height', svgHeight)
-    .attr("xlink:href", "assets/road.png")
+        let railsNetwork = svg.append("svg:image")
+            .attr('x', 0)
+            .attr('y', -0)
+            .attr('width', svgWidth)
+            .attr('height', svgHeight)
+            .attr("xlink:href", "assets/rail.png")
 
-let sexyCircles = svg.append('g')
-    .attr('class', 'sexy-circles');
+        let road = svg.append('g')
+            .attr('class', 'roads')
+            .attr('mask', 'url(#circle-mask)');
 
-let cityNames = svg.append('g')
-    .attr('class', 'city-names');
+        let roadsNetwork = svg.append("svg:image")
+            .attr('x', 0)
+            .attr('y', -0)
+            .attr('width', svgWidth)
+            .attr('height', svgHeight)
+            .attr("xlink:href", "assets/road.png")
 
-d3.xml('assets/layer-names-01.svg')
-    .then(function(vectors) {
-
-        d3.select(vectors).selectAll('svg > g').each(function() {
-            d3.select('.city-names').node().appendChild(this)
+        d3.select(loadedSVG).selectAll('svg > #city-labels').each(function() {
+            svg.node().appendChild(this);
         })
 
-        d3.selectAll('.city-names text').attr('filter', 'url(#dropshadow)')
-
-        d3.selectAll('.city-names > g')
+        d3.select('svg > g#city-labels')
+            // .style('opacity', 1)
+            .selectAll('g')
             .on('click', function(d) {
                 let thisId = d3.select(this).attr('id');
-                loadVectors(thisId);
+                thisId = thisId.replace('label-', '')
+                showVectors(thisId);
                 idle = false;
             })
             .on('touchstart', function(d) {
                 let thisId = d3.select(this).attr('id');
                 if (d3.event.touches.length < 2) {
-                    loadVectors(thisId);
+                    thisId = thisId.replace('label-', '');
+                    showVectors(thisId);
                     idle = false;
                 }
             })
+
+        d3.selectAll('svg > g#city-labels text').attr('filter', 'url(#dropshadow)')
 
     })
 
 // Handle city selection
 let selectedCity;
-let loadVectors = function(cityName) {
+let showVectors = function(cityName) {
+
     if (selectedCity != cityName) {
         selectedCity = cityName;
-        d3.xml(`assets/${cityName}.svg`)
-            .then(function(vectors) {
-                removeIsochronousVectors();
-                d3.select(vectors).selectAll('svg > #rail > *').each(function(d, i) {
-                    let thisElement = d3.select('.rails').node().appendChild(this);
-                    d3.select(thisElement)
-                        .style('opacity', 1e-6)
-                        .transition()
-                        .delay((16 - i) * 25)
-                        .duration(500)
-                        .style('opacity', 1);
+
+        removeIsochronousVectors();
+
+        console.log('show new vectors');
+        console.log(vectors);
+
+        d3.select(vectors).selectAll(`#${cityName} > g > *`).each(function(d, i) {
+            let layer;
+            console.log(i)
+            if (i==0){layer = '.roads'} else {layer = '.rails'}
+            let thisElement = d3.select(layer).node().appendChild(this);      
+            d3.select(thisElement)
+                .style('opacity', 1e-6)
+                .transition()
+                .delay(function(d,i){
+                    console.log(i);
+                    return i
                 })
-                d3.select(vectors).selectAll('svg > #road > g').each(function(d, i) {
-                    let thisElement = d3.select('.roads').node().appendChild(this);
-                    d3.select(thisElement)
-                        .style('opacity', 1e-6)
-                        .transition()
-                        .delay((16 - i) * 25)
-                        .duration(500)
-                        .style('opacity', 1);
-                })
-            })
+                .duration(1500)
+                .style('opacity', 1);
+        })
+
+
+
+        // d3.xml(`assets/${cityName}.svg`)
+        //     .then(function(vectors) {
+
+        //         d3.select(vectors).selectAll('svg > #rail > *').each(function(d, i) {
+        //             let thisElement = d3.select('.rails').node().appendChild(this);
+        //             d3.select(thisElement)
+        //                 .style('opacity', 1e-6)
+        //                 .transition()
+        //                 .delay((16 - i) * 25)
+        //                 .duration(500)
+        //                 .style('opacity', 1);
+        //         })
+        //         d3.select(vectors).selectAll('svg > #road > g').each(function(d, i) {
+        //             let thisElement = d3.select('.roads').node().appendChild(this);
+        //             d3.select(thisElement)
+        //                 .style('opacity', 1e-6)
+        //                 .transition()
+        //                 .delay((16 - i) * 25)
+        //                 .duration(500)
+        //                 .style('opacity', 1);
+        //         })
+        //     })
     }
 }
 
 let removeIsochronousVectors = function() {
-    // console.log('remove vectors');
+    console.log('hide vectors');
     // idleTime = 0;
+
+    let allCities = d3.selectAll('svg > g:not(#city-labels)');
+
     d3.selectAll('.rails > *')
         .transition()
         .duration(250)
         .delay(function(d, i) {
-            return i * 20;
+            return i * 20 *0;
         })
         .style('opacity', 1e-6)
         .remove();
@@ -137,80 +158,160 @@ let removeIsochronousVectors = function() {
         .transition()
         .duration(250)
         .delay(function(d, i) {
-            return i * 20;
+            return i * 20*0 ;
         })
         .style('opacity', 1e-6)
         .remove();
 }
 
 
-// Handle idle time
-let idle = true;
-let idleTime = 0;
-let secondsInterval = 2;
-let idleInterval = setInterval(timerIncrement, secondsInterval * 1000); // Count seconds
-let sexyCircleCount = 0;
 
-timerIncrement(); // run imediately only the first time
-function timerIncrement() {
-    idleTime = idleTime + secondsInterval;
-    if (idleTime >= 20) {
-        removeIsochronousVectors();
-        idle = true;
-    }
-    // console.log(idleTime, idle)
 
-    if (idle) {
-        d3.selectAll('g.city-names > g').select('circle').filter(function(d, i) { return i == sexyCircleCount })
-            .attr('r', 0)
-            .style('fill', 'transparent')
-            .style('fill', 'transparent')
-            .style('stroke', '#ffffff')
-            // .style('stroke', '#faf7c1')
-            .style('pointer-events', 'none')
-            .style('stroke-width', 2)
-            .style('opacity', 1)
-            .transition()
-            .duration(4000)
-            .ease(d3.easeCubicOut)
-            // .style('stroke','#342364')                
-            .attr('r', 400)
-            .style('opacity', 1e-6);
-        sexyCircleCount++;
-        if (sexyCircleCount >= d3.selectAll('g.city-names > g').select('circle').size()) {
-            sexyCircleCount = 0;
-        }
-    }
-}
 
-// Handle interactions
-d3.select('#present')
-    .on('click', function() {
-        d3.select('.rails').attr('mask', 'url(#hole-mask)');
-        d3.select('.roads').attr('mask', 'url(#circle-mask)');
-    })
-    .on('touchstart', function() {
-        d3.select('.rails').attr('mask', 'url(#hole-mask)');
-        d3.select('.roads').attr('mask', 'url(#circle-mask)');
-    })
 
-d3.select('#future')
-    .on('click', function() {
-        d3.select('.rails').attr('mask', 'url(#circle-mask)');
-        d3.select('.roads').attr('mask', 'url(#hole-mask)');
-    })
-    .on('touchstart', function() {
-        d3.select('.rails').attr('mask', 'url(#circle-mask)');
-        d3.select('.roads').attr('mask', 'url(#hole-mask)');
-    })
 
-d3.selectAll('.toggle-vision')
-    .on('click', function() {
-        d3.select("#vision")
-            .classed("closed", function(d, i) {
-                return !d3.select(this).classed("closed");
-            });
-    })
+
+
+
+
+
+
+
+// let morphologyBG = svg.append('rect')
+//     .attr('class', 'morphology')
+//     .attr('width', svgWidth)
+//     .attr('height', svgHeight)
+//     .attr('x', 0)
+//     .attr('y', 0)
+//     .attr('fill', '#17202A')
+
+// let morphology = svg.append("svg:image")
+//     .attr('x', 0)
+//     .attr('y', -0)
+//     .attr('width', svgWidth)
+//     .attr('height', svgHeight)
+//     .attr("xlink:href", "assets/morphology.png")
+
+// let rails = svg.append('g')
+//     .attr('class', 'rails')
+//     .attr('mask', 'url(#hole-mask)');
+
+// let railsNetwork = svg.append("svg:image")
+//     .attr('x', 0)
+//     .attr('y', -0)
+//     .attr('width', svgWidth)
+//     .attr('height', svgHeight)
+//     .attr("xlink:href", "assets/rail.png")
+
+// let road = svg.append('g')
+//     .attr('class', 'roads')
+//     .attr('mask', 'url(#circle-mask)');
+
+// let roadsNetwork = svg.append("svg:image")
+//     .attr('x', 0)
+//     .attr('y', -0)
+//     .attr('width', svgWidth)
+//     .attr('height', svgHeight)
+//     .attr("xlink:href", "assets/road.png")
+
+// let sexyCircles = svg.append('g')
+//     .attr('class', 'sexy-circles');
+
+// let cityNames = svg.append('g')
+//     .attr('class', 'city-names');
+
+// d3.xml('assets/layer-names-01.svg')
+//     .then(function(vectors) {
+
+//         d3.select(vectors).selectAll('svg > g').each(function() {
+//             d3.select('.city-names').node().appendChild(this)
+//         })
+
+//         d3.selectAll('.city-names text').attr('filter', 'url(#dropshadow)')
+
+//         d3.selectAll('.city-names > g')
+//             .on('click', function(d) {
+//                 let thisId = d3.select(this).attr('id');
+//                 loadVectors(thisId);
+//                 idle = false;
+//             })
+//             .on('touchstart', function(d) {
+//                 let thisId = d3.select(this).attr('id');
+//                 if (d3.event.touches.length < 2) {
+//                     loadVectors(thisId);
+//                     idle = false;
+//                 }
+//             })
+//     })
+
+
+// // Handle idle time
+// let idle = true;
+// let idleTime = 0;
+// let secondsInterval = 2;
+// let idleInterval = setInterval(timerIncrement, secondsInterval * 1000); // Count seconds
+// let sexyCircleCount = 0;
+
+// timerIncrement(); // run imediately only the first time
+// function timerIncrement() {
+//     idleTime = idleTime + secondsInterval;
+//     if (idleTime >= 20) {
+//         removeIsochronousVectors();
+//         idle = true;
+//     }
+//     // console.log(idleTime, idle)
+
+//     if (idle) {
+//         d3.selectAll('g.city-names > g').select('circle').filter(function(d, i) { return i == sexyCircleCount })
+//             .attr('r', 0)
+//             .style('fill', 'transparent')
+//             .style('fill', 'transparent')
+//             .style('stroke', '#ffffff')
+//             // .style('stroke', '#faf7c1')
+//             .style('pointer-events', 'none')
+//             .style('stroke-width', 2)
+//             .style('opacity', 1)
+//             .transition()
+//             .duration(4000)
+//             .ease(d3.easeCubicOut)
+//             // .style('stroke','#342364')                
+//             .attr('r', 400)
+//             .style('opacity', 1e-6);
+//         sexyCircleCount++;
+//         if (sexyCircleCount >= d3.selectAll('g.city-names > g').select('circle').size()) {
+//             sexyCircleCount = 0;
+//         }
+//     }
+// }
+
+// // Handle interactions
+// d3.select('#present')
+//     .on('click', function() {
+//         d3.select('.rails').attr('mask', 'url(#hole-mask)');
+//         d3.select('.roads').attr('mask', 'url(#circle-mask)');
+//     })
+//     .on('touchstart', function() {
+//         d3.select('.rails').attr('mask', 'url(#hole-mask)');
+//         d3.select('.roads').attr('mask', 'url(#circle-mask)');
+//     })
+
+// d3.select('#future')
+//     .on('click', function() {
+//         d3.select('.rails').attr('mask', 'url(#circle-mask)');
+//         d3.select('.roads').attr('mask', 'url(#hole-mask)');
+//     })
+//     .on('touchstart', function() {
+//         d3.select('.rails').attr('mask', 'url(#circle-mask)');
+//         d3.select('.roads').attr('mask', 'url(#hole-mask)');
+//     })
+
+// d3.selectAll('.toggle-vision')
+//     .on('click', function() {
+//         d3.select("#vision")
+//             .classed("closed", function(d, i) {
+//                 return !d3.select(this).classed("closed");
+//             });
+//     })
 
 let defs = svg.append('defs');
 
