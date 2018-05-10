@@ -27,8 +27,7 @@ d3.select(window).on('resize', function() {
 let vectors;
 d3.xml('assets/italia-3-01.svg')
     .then(function(loadedSVG) {
-
-        console.log(loadedSVG);
+        // console.log(loadedSVG);
 
         vectors = loadedSVG;
         d3.select(loadedSVG).select('svg > #sfondo').each(function() {
@@ -209,7 +208,7 @@ let sexyCircleCount = 0;
 timerIncrement(); // run imediately only the first time
 function timerIncrement() {
     idleTime = idleTime + secondsInterval;
-    if (idleTime >= 10 && !idle) {
+    if (idleTime >= 20 && !idle) {
         removeIsochronousVectors();
         idle = true;
         let idleTime = 0;
@@ -219,17 +218,15 @@ function timerIncrement() {
         d3.selectAll('g#label > g').select('circle').filter(function(d, i) { return i == sexyCircleCount })
             .attr('r', 0)
             .style('fill', 'transparent')
-            .style('fill', 'transparent')
-            .style('stroke', '#ffffff')
-            // .style('stroke', '#faf7c1')
+            .style('stroke-width', 1)
+            .style('stroke', '#faf7c1')
             .style('pointer-events', 'none')
-            .style('stroke-width', 2)
-            .style('opacity', 1)
+            .style('opacity', .7)
             .transition()
-            .duration(4000)
-            .ease(d3.easeCubicOut)
-            // .style('stroke','#342364')                
-            .attr('r', 200)
+            .duration(5000)
+            .ease(d3.easeCircleOut)
+            .style('stroke','#342364')                
+            .attr('r', 150)
             .style('opacity', 1e-6);
         sexyCircleCount++;
         if (sexyCircleCount >= d3.selectAll('g#label > g').select('circle').size()) {
