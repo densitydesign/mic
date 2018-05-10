@@ -103,6 +103,15 @@
         pointer-events: all;
     }
 
+    #close-button-container {
+        display: flex;
+        justify-content: flex-end;
+        width: 95%;
+        padding-right: 5%;
+        padding-top: 5%;
+    }
+
+
 
     #close-button {
         width: 10vw;
@@ -112,9 +121,16 @@
         font-family: "Work Sans";
         text-align: center;
         font-weight: 200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
 
+
+    #close-button p {
+        max-width: 50%;
+    }
 
     .vision-maps {
         display: flex;
@@ -144,6 +160,7 @@
         line-height: 1.6rem;
     }
 
+
     .vision-map-item {}
 
 
@@ -154,6 +171,7 @@
     .vision-map-item p {
         font-size: 1rem;
         font-weight: 200;
+        text-align: center;
     }
     </style>
 </head>
@@ -259,7 +277,7 @@
     </svg>
     <section id="vision" class="closed">
         <div class="container">
-            <span id="close-button" class="toggle-vision">X</span>
+            <div id="close-button-container"> <span id="close-button" class="toggle-vision">X</span></div>
             <div class="vision-txt">
                 <h2>La mobilità 2050 utilizzerà la rete stradale esistente, massimizzandone ii potenziale grazie a sistemi di trasporto collettivi <span class="semibold">driverless</span>.</h2>
                 <p>Velocità e capacità dei sistemi sarà funzione della gerarchia delle strade percorse: le reti autostradali percorse da servizi ad alta velocità e capacità e le reti secondarie e locali che permetteranno invece di coprire ii territorio, fino alle aree interne, innervandosi e garantendo un'accessibilita isotropica all'ltalia</p>
