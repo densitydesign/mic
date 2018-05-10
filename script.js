@@ -1,4 +1,4 @@
-let svg = d3.select('body > svg'),
+let svg = d3.select('body > svg#map'),
     svgWidth = 1080,
     svgHeight = 1560,
     ratio = 1,
@@ -110,16 +110,6 @@ d3.xml('assets/italia-3-01.svg')
         d3.selectAll('svg > g#label text').attr('filter', 'url(#dropshadow)')
 
     })
-
-function clone(selector) {
-    var node = d3.select(selector).node();
-    return d3.select(node.parentNode.insertBefore(node.cloneNode(true), node.nextSibling));
-}
-
-function cloneAll(selector) {
-    var node = d3.selectAll(selector).node();
-    return d3.selectAll(node.parentNode.insertBefore(node.cloneNode(true), node.nextSibling));
-}
 
 // Handle city selection
 let selectedCity;
@@ -236,22 +226,71 @@ function timerIncrement() {
 }
 
 // Handle interactions with buttons
-d3.select('#present')
+// "fill: #e5e5e5;stroke: #000"
+d3.select('#button-2018')
     .on('click', function() {
+        d3.select(this).select('rect')
+            .style('fill', '#e5e5e5')
+            .style('stroke', '#000')
+        d3.select(this).select('text')
+            .style('fill', '#000')
+
+        d3.select('#button-2050').select('rect')
+            .style('fill', '#000')
+            .style('stroke','#e5e5e5')
+        d3.select('#button-2050').select('text')
+            .style('fill', '#e5e5e5')
+
         d3.select('g.rails').attr('mask', 'url(#hole-mask)');
         d3.select('g.roads').attr('mask', 'url(#circle-mask)');
     })
     .on('touchstart', function() {
+        d3.select(this).select('rect')
+            .style('fill', '#e5e5e5')
+            .style('stroke', '#000')
+        d3.select(this).select('text')
+            .style('fill', '#000')
+
+        d3.select('#button-2050').select('rect')
+            .style('fill', '#000')
+            .style('stroke','#e5e5e5')
+        d3.select('#button-2050').select('text')
+            .style('fill', '#e5e5e5')
+
         d3.select('g.rails').attr('mask', 'url(#hole-mask)');
         d3.select('g.roads').attr('mask', 'url(#circle-mask)');
     })
 
-d3.select('#future')
+d3.select('#button-2050')
     .on('click', function() {
+        d3.select(this).select('rect')
+            .style('fill', '#e5e5e5')
+            .style('stroke', '#000')
+        d3.select(this).select('text')
+            .style('fill', '#000')
+
+        d3.select('#button-2018').select('rect')
+            .style('fill', '#000')
+            .style('stroke','#e5e5e5')
+        d3.select('#button-2018').select('text')
+            .style('fill', '#fff')
+
         d3.select('g.rails').attr('mask', 'url(#circle-mask)');
         d3.select('g.roads').attr('mask', 'url(#hole-mask)');
     })
     .on('touchstart', function() {
+        d3.select(this).select('rect')
+            .style('fill', '#e5e5e5')
+            .style('stroke', '#000')
+        d3.select(this).select('text')
+            .style('fill', '#000')
+
+        d3.select('#button-2018').select('rect')
+            .style('fill', '#000')
+            .style('stroke','#e5e5e5')
+        d3.select('#button-2018').select('text')
+            .style('fill', '#fff')
+
         d3.select('g.rails').attr('mask', 'url(#circle-mask)');
         d3.select('g.roads').attr('mask', 'url(#hole-mask)');
     })
