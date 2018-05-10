@@ -303,6 +303,14 @@ d3.selectAll('.toggle-vision')
             });
     })
 
+d3.selectAll('#button-vision')
+    .on('click', function() {
+        d3.select("#vision")
+            .classed("closed", function(d, i) {
+                return !d3.select(this).classed("closed");
+            });
+    })
+
 let defs = svg.append('defs');
 
 defs.html(`<filter xmlns="http://www.w3.org/2000/svg" id="dropshadow" height="130%">

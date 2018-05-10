@@ -11,7 +11,7 @@
     <text transform="translate(332 170)" style="isolation: isolate;font-size: 14px;fill: #fff;font-family: Work Sans">toccando l<tspan x="73.289" y="0">a</tspan><tspan x="80.905" y="0" style="white-space: pre"> mapp</tspan><tspan x="124.654" y="0">a</tspan></text>
     <text transform="translate(669 150)" style="isolation: isolate;font-size: 14px;fill: #fff;font-family: Work Sans">Scopri di più:</text>
   </g>
-  <g id="button-vision">
+  <g id="button-vision" class="toggle-vision">
     <rect id="Background" x="669" y="186" width="93" height="43" rx="8" ry="8" style="fill: none;stroke: #9b9b9b"/>
     <text transform="translate(685 212)" style="isolation: isolate;font-size: 17px;fill: #fff;font-family: Work Sans">VISIO</text>
     <text transform="translate(734.342 212)" style="font-size: 17px;fill: #fff;font-family: Work Sans"> </text>
