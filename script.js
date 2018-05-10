@@ -93,12 +93,14 @@ d3.xml('assets/italia-3-01.svg')
             .selectAll('g')
             .on('click', function(d) {
                 let thisId = d3.select(this).attr('id');
+                // console.log(thisId);
                 thisId = thisId.replace('label-', '')
                 showVectors(thisId);
                 idle = false;
             })
             .on('touchstart', function(d) {
                 let thisId = d3.select(this).attr('id');
+                // console.log(thisId);
                 if (d3.event.touches.length < 2) {
                     thisId = thisId.replace('label-', '');
                     showVectors(thisId);
@@ -178,6 +180,8 @@ let showVectors = function(cityName) {
 let removeIsochronousVectors = function() {
     console.log('hide vectors');
 
+    selectedCity = '';
+
     d3.selectAll(`.rails > g > *`)
         .transition()
         .duration(1000)
@@ -205,16 +209,13 @@ let sexyCircleCount = 0;
 timerIncrement(); // run imediately only the first time
 function timerIncrement() {
     idleTime = idleTime + secondsInterval;
-    if (idleTime >= 20) {
+    if (idleTime >= 10 && !idle) {
         removeIsochronousVectors();
         idle = true;
         let idleTime = 0;
     }
-    console.log(idleTime, idle)
-
     if (idle) {
-        console.log(d3.selectAll('g#label > g').select('circle').size())
-
+        console.log(idleTime, idle);
         d3.selectAll('g#label > g').select('circle').filter(function(d, i) { return i == sexyCircleCount })
             .attr('r', 0)
             .style('fill', 'transparent')
@@ -228,7 +229,7 @@ function timerIncrement() {
             .duration(4000)
             .ease(d3.easeCubicOut)
             // .style('stroke','#342364')                
-            .attr('r', 400)
+            .attr('r', 200)
             .style('opacity', 1e-6);
         sexyCircleCount++;
         if (sexyCircleCount >= d3.selectAll('g#label > g').select('circle').size()) {
