@@ -25,7 +25,6 @@ d3.select(window).on('resize', function() {
 
 d3.xml('assets/toolbar-01.svg')
     .then(function(loadedSVG) {
-        console.log(loadedSVG)
         let toolbar = d3.select(loadedSVG).select('svg').node();
         d3.select('body').node().appendChild(toolbar);
 
@@ -46,7 +45,9 @@ d3.xml('assets/toolbar-01.svg')
                     .style('fill', '#e5e5e5')
 
                 d3.select('g.rails').attr('mask', 'url(#hole-mask)');
+                d3.select('.rails-network').attr('mask', 'url(#hole-mask)');               
                 d3.select('g.roads').attr('mask', 'url(#circle-mask)');
+                d3.select('.roads-network').attr('mask', 'url(#circle-mask)');
             })
             .on('touchstart', function() {
                 d3.select(this).select('rect')
@@ -62,7 +63,10 @@ d3.xml('assets/toolbar-01.svg')
                     .style('fill', '#e5e5e5')
 
                 d3.select('g.rails').attr('mask', 'url(#hole-mask)');
+                d3.select('.rails-network').attr('mask', 'url(#hole-mask)');               
                 d3.select('g.roads').attr('mask', 'url(#circle-mask)');
+                d3.select('.roads-network').attr('mask', 'url(#circle-mask)');
+
             })
 
         d3.select('#button-2050')
@@ -80,7 +84,9 @@ d3.xml('assets/toolbar-01.svg')
                     .style('fill', '#fff')
 
                 d3.select('g.rails').attr('mask', 'url(#circle-mask)');
+                d3.select('.rails-network').attr('mask', 'url(#circle-mask)');
                 d3.select('g.roads').attr('mask', 'url(#hole-mask)');
+                d3.select('.roads-network').attr('mask', 'url(#hole-mask)');
             })
             .on('touchstart', function() {
                 d3.select(this).select('rect')
@@ -96,7 +102,9 @@ d3.xml('assets/toolbar-01.svg')
                     .style('fill', '#fff')
 
                 d3.select('g.rails').attr('mask', 'url(#circle-mask)');
+                d3.select('.rails-network').attr('mask', 'url(#circle-mask)');               
                 d3.select('g.roads').attr('mask', 'url(#hole-mask)');
+                d3.select('.roads-network').attr('mask', 'url(#hole-mask)');
             })
 
         d3.selectAll('.toggle-vision')
@@ -119,7 +127,7 @@ d3.xml('assets/toolbar-01.svg')
 
 // Load SVG
 let vectors;
-d3.xml('assets/italia-3-01.svg')
+d3.xml('assets/italia-4-01.svg')
     .then(function(loadedSVG) {
         // console.log(loadedSVG);
 
@@ -133,28 +141,50 @@ d3.xml('assets/italia-3-01.svg')
             .attr('mask', 'url(#hole-mask)');
 
         let railsNetwork = svg.append("svg:image")
+            .classed('rails-network',true)
+            .classed('networks',true)
             .attr('x', 0)
             .attr('y', -0)
             .attr('width', svgWidth)
             .attr('height', svgHeight)
-            .attr("xlink:href", "assets/rail.png")
+            .style('opacity', 0.7)
+            .attr("xlink:href", "assets/rails-raster.png")
+            .attr('mask', 'url(#hole-mask)');
+
+        // let railsNetwork = svg.append('g')
+        //     .classed('rails-network',true)
+        //     .attr('mask', 'url(#hole-mask)');
+        // d3.select(loadedSVG).select('svg > #network > #rail-network').each(function() {
+        //     d3.select('.rails-network').node().appendChild(this);
+        // })
 
         let road = svg.append('g')
             .attr('class', 'roads')
             .attr('mask', 'url(#circle-mask)');
 
+        // let roadsNetwork = svg.append('g')
+        //     .classed('roads-network',true)
+        //     .attr('mask', 'url(#circle-mask)');
+        // d3.select(loadedSVG).select('svg > #network > #road-network').each(function() {
+        //     d3.select('.roads-network').node().appendChild(this);
+        // })
+
         let roadsNetwork = svg.append("svg:image")
+            .classed('roads-network',true)
+            .classed('networks',true)
             .attr('x', 0)
             .attr('y', -0)
             .attr('width', svgWidth)
             .attr('height', svgHeight)
-            .attr("xlink:href", "assets/road.png")
+            .style('opacity', 1)
+            .attr("xlink:href", "assets/roads-raster.png")
+            .attr('mask', 'url(#circle-mask)');
 
         d3.select(loadedSVG).selectAll('svg > #label').each(function() {
             svg.node().appendChild(this);
         })
 
-        let cities = d3.select(loadedSVG).selectAll('svg > g:not(#label)').each(function(d, i) {
+        let cities = d3.select(loadedSVG).selectAll('svg > g:not(#label):not(#network)').each(function(d, i) {
             // console.log(this);
             let thisCity = d3.select(this).attr('id')
             d3.select(this).selectAll(':scope > g').each(function(d, i) {
@@ -298,7 +328,7 @@ function timerIncrement() {
         let idleTime = 0;
     }
     if (idle) {
-        console.log(idleTime, idle);
+        // console.log(idleTime, idle);
         d3.selectAll('g#label > g').select('circle').filter(function(d, i) { return i == sexyCircleCount })
             .attr('r', 0)
             .style('fill', 'transparent')
