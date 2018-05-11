@@ -81,10 +81,32 @@
         background-color: black;
     }
 
+
+    #vision.closed .vision-txt {
+        opacity: 0;
+        transition: opacity 2s ease-in;
+    }
+
+    #vision .vision-txt {
+        opacity: 1;
+        transition: opacity 2s ease-in;
+    }
+
+    #vision.closed .vision-maps {
+        opacity: 0;
+        transition: opacity 2s ease-in;
+    }
+
+    #vision .vision-maps {
+        opacity: 1;
+        transition: opacity 2s ease-in;
+    }
+
+
     #vision.closed {
         border-radius: 50%;
-        top: 82.6vh;
-        left: 29vw;
+        top: 85.9vh;
+        left: 63vw;
         width: 10vw;
         height: 10vw;
         opacity: 0;
@@ -143,14 +165,17 @@
     .vision-maps {
         padding: 0 6% 0 6%;
         font-family: "Work Sans";
+        opacity: 0;
     }
+
+
 
 
     .vision-txt h2 {
 
         font-weight: 200;
         font-size: 1.7rem;
-        letter-spacing: 0.1rem;
+        letter-spacing: 0.03rem;
         line-height: 2.1rem;
     }
 
@@ -175,7 +200,6 @@
         font-weight: 200;
         text-align: center;
     }
-   
     /* only when a isochrone is displayed
   
    .roads-network{
@@ -186,8 +210,6 @@
      mix-blend-mode:overlay;
    } 
     */
-
-
     </style>
 </head>
 
