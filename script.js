@@ -127,7 +127,7 @@ d3.xml('assets/toolbar-01.svg')
 
 // Load SVG
 let vectors;
-d3.xml('assets/italia-4-01.svg')
+d3.xml('assets/italia-6-01.svg')
     .then(function(loadedSVG) {
         // console.log(loadedSVG);
 
