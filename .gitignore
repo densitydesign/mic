@@ -58,3 +58,5 @@ typings/
 .env
 
 graphics/.DS_Store
+
+.DS_Store
