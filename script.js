@@ -2,7 +2,7 @@ let svg = d3.select('body > svg#map'),
     svgWidth = 1080,
     svgHeight = 1560,
     ratio = 1,
-    radius = svgWidth * 0.04;
+    radius = svgWidth * 0.06;
 
 // Handle screen resolutions
 function setRatio() {
@@ -127,7 +127,7 @@ d3.xml('assets/toolbar-01.svg')
 
 // Load SVG
 let vectors;
-d3.xml('assets/italia-6-01.svg')
+d3.xml('assets/italia-7-01.svg')
     .then(function(loadedSVG) {
         console.log(loadedSVG);
 
@@ -147,8 +147,8 @@ d3.xml('assets/italia-6-01.svg')
             .attr('y', -0)
             .attr('width', 1080)
             .attr('height', 1560)
-            .style('opacity', 0.7)
-            .attr("xlink:href", "assets/rails-raster.png")
+            .style('opacity', 1)
+            .attr("xlink:href", "assets/rails-raster-1080.png")
             .attr('mask', 'url(#hole-mask)');
 
         let road = svg.append('g')
@@ -163,7 +163,7 @@ d3.xml('assets/italia-6-01.svg')
             .attr('width', 1080)
             .attr('height', 1560)
             .style('opacity', 1)
-            .attr("xlink:href", "assets/roads-raster.png")
+            .attr("xlink:href", "assets/roads-raster-1080.png")
             .attr('mask', 'url(#circle-mask)');
 
         let axes = svg.append('g')
@@ -172,6 +172,16 @@ d3.xml('assets/italia-6-01.svg')
         d3.select(loadedSVG).selectAll('svg > #axes').each(function() {
             axes.node().appendChild(this);
         })
+
+        d3.select('#show-networks')
+            .on('click', function() {
+                removeIsochronousVectors();
+            })
+            .on('touchstart', function() {
+                if (d3.event.touches.length < 2) {
+                    removeIsochronousVectors();
+                }
+            });
 
         d3.select('g.axes > g')
             .style('opacity', 1e-6)
@@ -288,6 +298,13 @@ let showVectors = function(cityName) {
             })
             .style('opacity', 1)
 
+        d3.selectAll('.networks')
+            .transition()
+            .duration(1400)
+            .style('opacity', .4)
+
+
+
         d3.select('g.axes > g')
             .transition()
             .duration(fadeInDuration)
@@ -315,6 +332,11 @@ let removeIsochronousVectors = function() {
         .on('end', function() {
             d3.select(this).style('display', 'none')
         })
+
+    d3.selectAll('.networks')
+        .transition()
+        .duration(1400)
+        .style('opacity', 1)
 
     d3.select('g.axes > g')
         .transition()
