@@ -45,7 +45,7 @@ d3.xml('assets/toolbar-01.svg')
                     .style('fill', '#e5e5e5')
 
                 d3.select('g.rails').attr('mask', 'url(#hole-mask)');
-                d3.select('.rails-network').attr('mask', 'url(#hole-mask)');               
+                d3.select('.rails-network').attr('mask', 'url(#hole-mask)');
                 d3.select('g.roads').attr('mask', 'url(#circle-mask)');
                 d3.select('.roads-network').attr('mask', 'url(#circle-mask)');
             })
@@ -63,7 +63,7 @@ d3.xml('assets/toolbar-01.svg')
                     .style('fill', '#e5e5e5')
 
                 d3.select('g.rails').attr('mask', 'url(#hole-mask)');
-                d3.select('.rails-network').attr('mask', 'url(#hole-mask)');               
+                d3.select('.rails-network').attr('mask', 'url(#hole-mask)');
                 d3.select('g.roads').attr('mask', 'url(#circle-mask)');
                 d3.select('.roads-network').attr('mask', 'url(#circle-mask)');
 
@@ -102,7 +102,7 @@ d3.xml('assets/toolbar-01.svg')
                     .style('fill', '#fff')
 
                 d3.select('g.rails').attr('mask', 'url(#circle-mask)');
-                d3.select('.rails-network').attr('mask', 'url(#circle-mask)');               
+                d3.select('.rails-network').attr('mask', 'url(#circle-mask)');
                 d3.select('g.roads').attr('mask', 'url(#hole-mask)');
                 d3.select('.roads-network').attr('mask', 'url(#hole-mask)');
             })
@@ -129,7 +129,7 @@ d3.xml('assets/toolbar-01.svg')
 let vectors;
 d3.xml('assets/italia-6-01.svg')
     .then(function(loadedSVG) {
-        // console.log(loadedSVG);
+        console.log(loadedSVG);
 
         vectors = loadedSVG;
         d3.select(loadedSVG).select('svg > #sfondo').each(function() {
@@ -141,8 +141,8 @@ d3.xml('assets/italia-6-01.svg')
             .attr('mask', 'url(#hole-mask)');
 
         let railsNetwork = svg.append("svg:image")
-            .classed('rails-network',true)
-            .classed('networks',true)
+            .classed('rails-network', true)
+            .classed('networks', true)
             .attr('x', 0)
             .attr('y', -0)
             .attr('width', 1080)
@@ -151,27 +151,13 @@ d3.xml('assets/italia-6-01.svg')
             .attr("xlink:href", "assets/rails-raster.png")
             .attr('mask', 'url(#hole-mask)');
 
-        // let railsNetwork = svg.append('g')
-        //     .classed('rails-network',true)
-        //     .attr('mask', 'url(#hole-mask)');
-        // d3.select(loadedSVG).select('svg > #network > #rail-network').each(function() {
-        //     d3.select('.rails-network').node().appendChild(this);
-        // })
-
         let road = svg.append('g')
             .attr('class', 'roads')
             .attr('mask', 'url(#circle-mask)');
 
-        // let roadsNetwork = svg.append('g')
-        //     .classed('roads-network',true)
-        //     .attr('mask', 'url(#circle-mask)');
-        // d3.select(loadedSVG).select('svg > #network > #road-network').each(function() {
-        //     d3.select('.roads-network').node().appendChild(this);
-        // })
-
         let roadsNetwork = svg.append("svg:image")
-            .classed('roads-network',true)
-            .classed('networks',true)
+            .classed('roads-network', true)
+            .classed('networks', true)
             .attr('x', 0)
             .attr('y', -0)
             .attr('width', 1080)
@@ -180,11 +166,21 @@ d3.xml('assets/italia-6-01.svg')
             .attr("xlink:href", "assets/roads-raster.png")
             .attr('mask', 'url(#circle-mask)');
 
+        let axes = svg.append('g')
+            .classed('axes', true)
+
+        d3.select(loadedSVG).selectAll('svg > #axes').each(function() {
+            axes.node().appendChild(this);
+        })
+
+        d3.select('g.axes > g')
+            .style('opacity', 1e-6)
+
         d3.select(loadedSVG).selectAll('svg > #label').each(function() {
             svg.node().appendChild(this);
         })
 
-        let cities = d3.select(loadedSVG).selectAll('svg > g:not(#label):not(#network)').each(function(d, i) {
+        let cities = d3.select(loadedSVG).selectAll('svg > g:not(#label):not(#network):not(#axes)').each(function(d, i) {
             // console.log(this);
             let thisCity = d3.select(this).attr('id')
             d3.select(this).selectAll(':scope > g').each(function(d, i) {
@@ -239,6 +235,10 @@ d3.xml('assets/italia-6-01.svg')
 let selectedCity;
 let showVectors = function(cityName) {
 
+    let fadeInDuration = 700;
+    let fadeOutDuration = 250;
+    let fadeInDelay = 40;
+
     if (selectedCity != cityName) {
         selectedCity = cityName;
 
@@ -246,14 +246,14 @@ let showVectors = function(cityName) {
 
         d3.selectAll(`.rails > g:not(.${cityName}) > *`)
             .transition()
-            .duration(350)
+            .duration(fadeOutDuration)
             .style('opacity', 1e-6)
             .on('end', function() {
                 d3.select(this).style('display', 'none')
             })
         d3.selectAll(`.roads > g:not(.${cityName}) > *`)
             .transition()
-            .duration(350)
+            .duration(fadeOutDuration)
             .style('opacity', 1e-6)
             .on('end', function() {
                 d3.select(this).style('display', 'none')
@@ -267,9 +267,9 @@ let showVectors = function(cityName) {
         railsGeometries
             .style('opacity', 1e-6)
             .transition()
-            .duration(500)
+            .duration(fadeInDuration)
             .delay(function(d, i) {
-                return (railsGeometries.size() - i) * 10
+                return (railsGeometries.size() - i) * fadeInDelay
             })
             .style('opacity', 1)
 
@@ -282,10 +282,15 @@ let showVectors = function(cityName) {
         roadsGeometries
             .style('opacity', 1e-6)
             .transition()
-            .duration(500)
+            .duration(fadeInDuration)
             .delay(function(d, i) {
-                return (roadsGeometries.size() - i) * 10
+                return (roadsGeometries.size() - i) * fadeInDelay
             })
+            .style('opacity', 1)
+
+        d3.select('g.axes > g')
+            .transition()
+            .duration(fadeInDuration)
             .style('opacity', 1)
     }
 }
@@ -310,6 +315,11 @@ let removeIsochronousVectors = function() {
         .on('end', function() {
             d3.select(this).style('display', 'none')
         })
+
+    d3.select('g.axes > g')
+        .transition()
+        .duration(1000)
+        .style('opacity', 1e-6)
 }
 
 // Handle idle time
